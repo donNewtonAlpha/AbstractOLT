@@ -1,0 +1,66 @@
+syntax = "proto3";
+package api;
+
+message AddChassisMessage{
+   string CLLI =1;
+   fixed32 VCoreIP =2;
+}
+message Error {
+   int32 ErrorNum = 1;
+   string ErrorMessage=2;
+   int32 Serverity=3;
+}
+message AddChassisReturn{
+   string DeviceID = 1;
+   Error error = 2;
+}
+message AddSlotMessage{
+   string ChassisDeviceID=1;
+   fixed32 SlotIP=2;
+   fixed32 SlotPort=3;
+   bool Activate = 4;
+   enum OltType {
+      openolt = 0;
+      asfvolt16=1;
+      adtran=2;
+      tibits=3;
+   }
+   OltType oltType = 5;
+}
+message AddSlotReturn {
+   string DeviceID =1;
+   string ChassisDeviceID =2;
+   Error error = 3;
+}
+message ActivateSlotMessage{
+   string SlotDeviceID = 1;
+}
+message ActivateSlotReturn{
+   bool Success = 1;
+   Error error = 2;
+}
+message AddOntMessage{
+   string ChassisDeviceID=1;
+   string SlotDeviceID=2;
+   int32 PortNumber=3;
+   int32 OntNumber=4;
+}
+message AddOntReturn{
+   bool Success=1;
+   Error error = 2;
+}
+
+service AddChassis{
+   rpc CreateChassis(AddChassisMessage) returns (AddChassisReturn) {}
+}
+
+service AddSlot {
+   rpc CreateSlot(AddSlotMessage) returns (AddSlotReturn) {}
+}
+service ActivateSlot{
+   rpc EnableSlot(ActivateSlotMessage) returns (ActivateSlotReturn){}
+}
+service ActivateOnt {
+   rpc ProvisionOnt(AddOntMessage) returns (AddOntReturn) {}
+}
+
