@@ -9,8 +9,8 @@ import (
 func main() {
 	fmt.Println("AbstractOLT")
 	var chassis models.Chassis
-	var slots [8]models.Slot
-	for i := 0; i < 8; i++ {
+	var slots [16]models.Slot
+	for i := 0; i < 16; i++ {
 		slot := models.Slot{Parent: &chassis}
 		fmt.Printf("slot %d\n", i)
 		slots[i] = slot
