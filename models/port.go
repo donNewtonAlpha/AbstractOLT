@@ -1,5 +1,8 @@
 package models
 
+/*
+Port represents a single PON port on the OLT chassis
+*/
 type Port struct {
 	Number   int
 	DeviceID string
