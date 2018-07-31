@@ -21,7 +21,8 @@ func main() {
 
 	fmt.Println("Hello!")
 
-	bytes, err := chassisSerialize.Serialize(chassis)
-	fmt.Println(err)
-	fmt.Println(string(bytes))
+	bytes, _ := chassisSerialize.Serialize(chassis)
+	chassis2, _ := chassisSerialize.Deserialize(bytes)
+	fmt.Println(chassis)
+	fmt.Println(chassis2)
 }
