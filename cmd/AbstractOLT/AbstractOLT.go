@@ -20,8 +20,8 @@ func main() {
 
 	fmt.Println("Hello!")
 
-	bytes, _ := chassisSerialize.Serialize(chassis)
+	bytes, _ := chassisSerialize.Serialize(&chassis)
 	chassis2, _ := chassisSerialize.Deserialize(bytes)
 	fmt.Println(chassis)
-	fmt.Println(chassis2)
+	fmt.Println(*chassis2)
 }

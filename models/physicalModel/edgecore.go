@@ -9,7 +9,7 @@ type Edgecore struct {
 	Hostname string
 	Address  net.TCPAddr
 	Number   int
-	Ports    [16]Port
+	Ports    [16]PONPort
 	Parent   *Chassis    `json:"-"`
 	DataSwitchPort  int
 }

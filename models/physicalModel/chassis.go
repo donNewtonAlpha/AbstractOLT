@@ -1,4 +1,4 @@
-package abstractOLTModel
+package physicalModel
 
 import "net"
 
@@ -7,7 +7,6 @@ Chassis is a model that takes up to 16 discreet OLT chassis as if it is a 16 slo
 */
 
 type Chassis struct {
-	VCoreAddress net.TCPAddr
-	CLLI         string
-	Slots        [16]Slot
+	Dataswitch   DataSwitch
+	Edgecores    [16]Edgecore
 }

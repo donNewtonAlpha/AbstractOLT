@@ -1,4 +1,4 @@
-package abstractOLTModel
+package physicalModel
 
 /*
 Ont represents a single ont/onu connect to a splitter on a Port
