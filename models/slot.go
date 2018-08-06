@@ -12,5 +12,5 @@ type Slot struct {
 	Address  net.TCPAddr
 	Number   int
 	Ports    [16]Port
-	Parent   *Chassis
+	Parent   *Chassis    `json:"-"`
 }
