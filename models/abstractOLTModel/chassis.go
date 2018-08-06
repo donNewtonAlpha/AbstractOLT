@@ -1,4 +1,4 @@
-package models
+package abstractOLTModel
 
 import "net"
 

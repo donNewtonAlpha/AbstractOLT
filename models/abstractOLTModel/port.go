@@ -1,4 +1,4 @@
-package models
+package abstractOLTModel
 
 /*
 Port represents a single PON port on the OLT chassis
