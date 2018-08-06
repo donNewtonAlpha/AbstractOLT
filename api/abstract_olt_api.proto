@@ -1,9 +1,11 @@
 syntax = "proto3";
 package api;
+import "google/api/annotations.proto";
 
 message AddChassisMessage{
    string CLLI =1;
-   fixed32 VCoreIP =2;
+   string VCoreIP =2;
+   int32 VCorePort=3;
 }
 message Error {
    int32 ErrorNum = 1;
@@ -51,7 +53,12 @@ message AddOntReturn{
 }
 
 service AddChassis{
-   rpc CreateChassis(AddChassisMessage) returns (AddChassisReturn) {}
+   rpc CreateChassis(AddChassisMessage) returns (AddChassisReturn) {
+      option(google.api.http) = {
+         post: "/1/AddChassis"
+	 body:"*"
+      };
+   }
 }
 
 service AddSlot {
