@@ -18,12 +18,25 @@ type Server struct {
 /*
 CreateChassis - allocates a new Chassis struct and stores it in chassisMap
 */
-func (s *Server) CreateChassis(ctx context.Context, in *AddChassisMessage) (*AddChassisReturn, error) {
-	chassisMap := models.GetChassisMap()
+func (s *Server) CreatePhyChassis(ctx context.Context, in *AddPhyChassisMessage) (*AddPhyChassisReturn, error) {
+	chassisMap := models.GetPhyChassisMap()
 	clli := in.GetCLLI()
 	chassis := (*chassisMap)[clli]
 	if chassis != nil {
-		return &AddChassisReturn{DeviceID: chassis.CLLI}, nil
+		return &AddPhyChassisReturn{DeviceID: chassis.CLLI}, nil
+	}
+	vCoreAddress := net.TCPAddr{IP: net.ParseIP(in.GetVCoreIP()), Port: int(in.GetVCorePort())}
+	newChassis := abstractOLTModel.Chassis{CLLI: clli, VCoreAddress: vCoreAddress}
+	fmt.Printf("new chassis %v\n", newChassis)
+	(*chassisMap)[clli] = &newChassis
+	return &AddPhyChassisReturn{DeviceID: newChassis.CLLI}, nil
+}
+func (s *Server) CreateAbstractChassis(ctx context.Context, in *AddAbstractChassisMessage) (*AddAbstractChassisReturn, error) {
+	chassisMap := models.GetAbstractChassisMap()
+	clli := in.GetCLLI()
+	chassis := (*chassisMap)[clli]
+	if chassis != nil {
+		return &AddAbstractChassisReturn{DeviceID: chassis.CLLI}, nil
 	}
 	vCoreAddress := net.TCPAddr{IP: net.ParseIP(in.GetVCoreIP()), Port: int(in.GetVCorePort())}
 	newChassis := abstractOLTModel.Chassis{CLLI: clli, VCoreAddress: vCoreAddress}

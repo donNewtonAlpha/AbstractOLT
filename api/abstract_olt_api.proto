@@ -2,7 +2,12 @@ syntax = "proto3";
 package api;
 import "google/api/annotations.proto";
 
-message AddChassisMessage{
+message AddPhyChassisMessage{
+   string CLLI =1;
+   string VCoreIP =2;
+   int32 VCorePort=3;
+}
+message AddAbstractChassisMessage{
    string CLLI =1;
    string VCoreIP =2;
    int32 VCorePort=3;
@@ -12,11 +17,15 @@ message Error {
    string ErrorMessage=2;
    int32 Serverity=3;
 }
-message AddChassisReturn{
+message AddPhyChassisReturn{
    string DeviceID = 1;
    Error error = 2;
 }
-message AddSlotMessage{
+message AddAbstractChassisReturn{
+   string DeviceID = 1;
+   Error error = 2;
+}
+message AddOLTChassisMessage{
    string ChassisDeviceID=1;
    fixed32 SlotIP=2;
    fixed32 SlotPort=3;
@@ -29,7 +38,7 @@ message AddSlotMessage{
    }
    OltType oltType = 5;
 }
-message AddSlotReturn {
+message AddOLTChassisReturn {
    string DeviceID =1;
    string ChassisDeviceID =2;
    Error error = 3;
@@ -52,20 +61,38 @@ message AddOntReturn{
    Error error = 2;
 }
 
-service AddChassis{
-   rpc CreateChassis(AddChassisMessage) returns (AddChassisReturn) {
+service AddPhyChassis{
+   rpc CreateChassis(AddPhyChassisMessage) returns (AddPhyChassisReturn) {
       option(google.api.http) = {
-         post: "/1/AddChassis"
+         post: "/1/CreatePhyChassis"
+	 body:"*"
+      };
+   }
+}
+service AddAbstractChassis{
+   rpc CreateChassis(AddAbstractChassisMessage) returns (AddAbstractChassisReturn) {
+      option(google.api.http) = {
+         post: "/1/CreateAbstractChassis"
 	 body:"*"
       };
    }
 }
 
-service AddSlot {
-   rpc CreateSlot(AddSlotMessage) returns (AddSlotReturn) {}
+service AddOLTChassis {
+   rpc AddOLTChassis(AddOLTChassisMessage) returns (AddOLTChassisReturn) {
+      option(google.api.http) = {
+         post: "/1/AddOLTChassis"
+	 body:"*"
+      };
+   }
 }
 service ActivateSlot{
-   rpc EnableSlot(ActivateSlotMessage) returns (ActivateSlotReturn){}
+   rpc EnableSlot(ActivateSlotMessage) returns (ActivateSlotReturn){
+      option(google.api.http) = {
+         post: "/1/EnableSlot"
+	 body:"*"
+      };
+   }
 }
 service ActivateOnt {
    rpc ProvisionOnt(AddOntMessage) returns (AddOntReturn) {}
