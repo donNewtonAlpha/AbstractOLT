@@ -7,13 +7,13 @@ import (
 	"github.com/donNewtonAlpha/AbstractOLT/models/physicalModel"
 )
 
-var chassisMap map[string]*abstractOLTModel.Chassis
+var chassisMap map[string]*physicalModel.Chassis
 var abstractChassisMap map[string]*abstractOLTModel.Chassis
 
 /*
 GetPhyChassisMap return the chassis map singleton
 */
-func GetPhyChassisMap() *map[string]*abstractOLTModel.Chassis {
+func GetPhyChassisMap() *map[string]*physicalModel.Chassis {
 	if chassisMap == nil {
 		fmt.Println("chassisMap was nil")
 		chassisMap = make(map[string]*physicalModel.Chassis)
@@ -33,5 +33,5 @@ func GetAbstractChassisMap() *map[string]*abstractOLTModel.Chassis {
 
 	}
 	fmt.Printf("chassis map %v\n", chassisMap)
-	return &chassisMap
+	return &abstractChassisMap
 }
