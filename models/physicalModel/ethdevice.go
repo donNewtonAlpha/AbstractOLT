@@ -1,7 +1,5 @@
 package physicalModel
 
-import "net"
-
 /*
 EthDevice represents a device with an ethernet port
 */

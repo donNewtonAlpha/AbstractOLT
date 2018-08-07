@@ -7,5 +7,5 @@ type PONPort struct {
 	Number   int
 	DeviceID string
 	Onts     [64]Ont
-	Parent   *Slot    `json:"-"`
+	Parent   *Edgecore    `json:"-"`
 }
