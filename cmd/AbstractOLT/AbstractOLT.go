@@ -125,11 +125,12 @@ func startRESTServer(address, grpcAddress, certFile string) error {
 	return nil
 }
 func main() {
-	file, err := os.OpenFile("file.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	file, err := os.OpenFile("AbstractOLT.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalln("Failed to open log file", file, ":", err)
 	}
 	log.SetOutput(file)
+	log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds | log.Lshortfile)
 
 	grpcAddress := fmt.Sprintf("%s:%d", "AbstractOLT.dev.atl.foundry.att.com", 7777)
 	restAddress := fmt.Sprintf("%s:%d", "AbstractOLT.dev.atl.foundry.att.com", 7778)

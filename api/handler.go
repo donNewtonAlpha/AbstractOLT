@@ -1,7 +1,9 @@
 package api
 
 import (
+	"fmt"
 	"log"
+	"strings"
 
 	"github.com/donNewtonAlpha/AbstractOLT/models"
 	"github.com/donNewtonAlpha/AbstractOLT/models/abstractOLTModel"
@@ -29,7 +31,9 @@ func (s *Server) CreateChassis(ctx context.Context, in *AddChassisMessage) (*Add
 	}
 	abstractChassis := abstractOLTModel.GenerateChassis(clli)
 	phyChassis := physicalModel.Chassis{CLLI: clli}
-	log.Printf("new chassis %v\n", abstractChassis)
+	output := fmt.Sprintf("%v", abstractChassis)
+	formatted := strings.Replace(output, "{", "\n{", -1)
+	log.Printf("new chassis %s\n", formatted)
 	(*phyChassisMap)[clli] = &phyChassis
 	(*absChassisMap)[clli] = abstractChassis
 	return &AddChassisReturn{DeviceID: clli}, nil
