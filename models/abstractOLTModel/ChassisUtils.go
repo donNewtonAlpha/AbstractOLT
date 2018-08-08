@@ -17,10 +17,7 @@ func GenerateChassis(CLLI string) *Chassis {
 	return &chassis
 }
 
-/*
-GenerateSlot creates an abstract _Slot_ for the Abstract Chassis - up to 16 slots per chassis - each with 16 Pon Ports
-*/
-func GenerateSlot(n int, c *Chassis) Slot {
+func generateSlot(n int, c *Chassis) Slot {
 	slot := Slot{Number: n, Parent: c}
 
 	var ports [16]Port
@@ -31,17 +28,14 @@ func GenerateSlot(n int, c *Chassis) Slot {
 	slot.Ports = ports
 	return slot
 }
-
-/*
-GeneratePort - creates an abstract port generates abstract onts and Assigns SVlans and CVlans
-*/
-func GeneratePort(n int, s *Slot) Port {
+func generatePort(n int, s *Slot) Port {
 	port := Port{Number: n, Parent: s}
 
 	var onts [64]Ont
 	for i := 0; i < 64; i++ {
-		onts[i] = Ont{Number: i, Svlan: calculateSvlan(s.Number, n, i),
-			Cvlan: calculateSvlan(s.Number, n, i), Parent: &port}
+		/* adding one because the system that provisions is 1 based on everything not 0 based*/
+		onts[i] = Ont{Number: i, Svlan: calculateSvlan(s.Number+1, n+1, i+1),
+			Cvlan: calculateCvlan(s.Number+1, n+1, i+1), Parent: &port}
 	}
 
 	port.Onts = onts
