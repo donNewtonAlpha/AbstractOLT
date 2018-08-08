@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net"
@@ -9,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/donNewtonAlpha/AbstractOLT/api"
+	"github.com/donNewtonAlpha/AbstractOLT/internal/pkg/settings"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -125,12 +127,17 @@ func startRESTServer(address, grpcAddress, certFile string) error {
 	return nil
 }
 func main() {
+	debugPtr := flag.Bool("d", false, "Log Level Debug")
+	flag.Parse()
+	settings.SetDebug(*debugPtr)
+
 	file, err := os.OpenFile("AbstractOLT.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalln("Failed to open log file", file, ":", err)
 	}
 	log.SetOutput(file)
 	log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds | log.Lshortfile)
+	log.Printf("Setting Debug to %t\n", settings.GetDebug())
 
 	grpcAddress := fmt.Sprintf("%s:%d", "AbstractOLT.dev.atl.foundry.att.com", 7777)
 	restAddress := fmt.Sprintf("%s:%d", "AbstractOLT.dev.atl.foundry.att.com", 7778)

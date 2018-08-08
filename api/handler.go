@@ -5,6 +5,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/donNewtonAlpha/AbstractOLT/internal/pkg/settings"
 	"github.com/donNewtonAlpha/AbstractOLT/models"
 	"github.com/donNewtonAlpha/AbstractOLT/models/abstractOLTModel"
 	"github.com/donNewtonAlpha/AbstractOLT/models/physicalModel"
@@ -31,9 +32,11 @@ func (s *Server) CreateChassis(ctx context.Context, in *AddChassisMessage) (*Add
 	}
 	abstractChassis := abstractOLTModel.GenerateChassis(clli)
 	phyChassis := physicalModel.Chassis{CLLI: clli}
-	output := fmt.Sprintf("%v", abstractChassis)
-	formatted := strings.Replace(output, "{", "\n{", -1)
-	log.Printf("new chassis %s\n", formatted)
+	if settings.GetDebug() {
+		output := fmt.Sprintf("%v", abstractChassis)
+		formatted := strings.Replace(output, "{", "\n{", -1)
+		log.Printf("new chassis %s\n", formatted)
+	}
 	(*phyChassisMap)[clli] = &phyChassis
 	(*absChassisMap)[clli] = abstractChassis
 	return &AddChassisReturn{DeviceID: clli}, nil
