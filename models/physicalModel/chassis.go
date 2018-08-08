@@ -10,5 +10,5 @@ type Chassis struct {
 	CLLI         string
 	VCoreAddress net.TCPAddr
 	Dataswitch   DataSwitch
-	Edgecores    [16]Edgecore
+	Linecards    []Olt
 }
