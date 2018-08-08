@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/donNewtonAlpha/AbstractOLT/api"
@@ -22,6 +23,9 @@ const (
 	clientIDKey contextKey = iota
 )
 
+/*
+GetLogger - returns the logger
+*/
 func credMatcher(headerName string) (mdName string, ok bool) {
 	if headerName == "Login" || headerName == "Password" {
 		return headerName, true
@@ -121,6 +125,12 @@ func startRESTServer(address, grpcAddress, certFile string) error {
 	return nil
 }
 func main() {
+	file, err := os.OpenFile("file.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalln("Failed to open log file", file, ":", err)
+	}
+	log.SetOutput(file)
+
 	grpcAddress := fmt.Sprintf("%s:%d", "AbstractOLT.dev.atl.foundry.att.com", 7777)
 	restAddress := fmt.Sprintf("%s:%d", "AbstractOLT.dev.atl.foundry.att.com", 7778)
 	certFile := "cert/server.crt"

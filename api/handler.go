@@ -1,10 +1,10 @@
 package api
 
 import (
-	"fmt"
-	// "net"
+	"log"
 
 	"github.com/donNewtonAlpha/AbstractOLT/models"
+	"github.com/donNewtonAlpha/AbstractOLT/models/abstractOLTModel"
 	"github.com/donNewtonAlpha/AbstractOLT/models/physicalModel"
 	context "golang.org/x/net/context"
 )
@@ -27,10 +27,10 @@ func (s *Server) CreateChassis(ctx context.Context, in *AddChassisMessage) (*Add
 	if chassis != nil {
 		return &AddChassisReturn{DeviceID: chassis.CLLI}, nil
 	}
-	abstractChassis := modelUtils.generateChassis(clli)
+	abstractChassis := abstractOLTModel.GenerateChassis(clli)
 	phyChassis := physicalModel.Chassis{CLLI: clli}
-	fmt.Printf("new chassis %v\n", phyChassis)
+	log.Printf("new chassis %v\n", abstractChassis)
 	(*phyChassisMap)[clli] = &phyChassis
-	(*abstractChassis)[clli] = &abstractChassis
-	return &AddChassisReturn{DeviceID: newChassis.CLLI}, nil
+	(*absChassisMap)[clli] = abstractChassis
+	return &AddChassisReturn{DeviceID: clli}, nil
 }
