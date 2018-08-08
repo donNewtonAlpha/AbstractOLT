@@ -19,14 +19,18 @@ type Server struct {
 CreateChassis - allocates a new Chassis struct and stores it in chassisMap
 */
 func (s *Server) CreateChassis(ctx context.Context, in *AddChassisMessage) (*AddChassisReturn, error) {
-	chassisMap := models.GetPhyChassisMap()
+	phyChassisMap := models.GetPhyChassisMap()
+	absChassisMap := models.GetAbstractChassisMap()
 	clli := in.GetCLLI()
-	chassis := (*chassisMap)[clli]
+
+	chassis := (*phyChassisMap)[clli]
 	if chassis != nil {
 		return &AddChassisReturn{DeviceID: chassis.CLLI}, nil
 	}
-	newChassis := physicalModel.Chassis{CLLI: clli}
-	fmt.Printf("new chassis %v\n", newChassis)
-	(*chassisMap)[clli] = &newChassis
+	abstractChassis := modelUtils.generateChassis(clli)
+	phyChassis := physicalModel.Chassis{CLLI: clli}
+	fmt.Printf("new chassis %v\n", phyChassis)
+	(*phyChassisMap)[clli] = &phyChassis
+	(*abstractChassis)[clli] = &abstractChassis
 	return &AddChassisReturn{DeviceID: newChassis.CLLI}, nil
 }
