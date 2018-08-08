@@ -2,8 +2,10 @@ package abstractOLTModel
 
 import "errors"
 
-
-func generateChassis(CLLI string) (*Chassis) {
+/*
+GenerateChassis - constructs a new AbstractOLT Chassis
+*/
+func GenerateChassis(CLLI string) *Chassis {
 	chassis := Chassis{CLLI: CLLI}
 
 	var slots [16]Slot
@@ -15,7 +17,10 @@ func generateChassis(CLLI string) (*Chassis) {
 	return &chassis
 }
 
-func generateSlot(n int, c *Chassis) (Slot) {
+/*
+GenerateSlot creates an abstract _Slot_ for the Abstract Chassis - up to 16 slots per chassis - each with 16 Pon Ports
+*/
+func GenerateSlot(n int, c *Chassis) Slot {
 	slot := Slot{Number: n, Parent: c}
 
 	var ports [16]Port
@@ -27,42 +32,42 @@ func generateSlot(n int, c *Chassis) (Slot) {
 	return slot
 }
 
-func generatePort(n int, s *Slot) (Port) {
+/*
+GeneratePort - creates an abstract port generates abstract onts and Assigns SVlans and CVlans
+*/
+func GeneratePort(n int, s *Slot) Port {
 	port := Port{Number: n, Parent: s}
 
 	var onts [64]Ont
 	for i := 0; i < 64; i++ {
 		onts[i] = Ont{Number: i, Svlan: calculateSvlan(s.Number, n, i),
-					Cvlan: calculateSvlan(s.Number, n, i), Parent: &port}
+			Cvlan: calculateSvlan(s.Number, n, i), Parent: &port}
 	}
 
 	port.Onts = onts
 	return port
 }
 
-
 func calculateCvlan(slot int, port int, ont int) int {
 	ONT_PORT_OFFSET := 120 // Max(ONT_SLOT) * Max(ONT_PORT) = 10 * 12 = 120
-	ONT_SLOT_OFFSET := 12 //= Max(ONT_PORT) = 12
-	VLAN_OFFSET := 1 //(VID 1 is reserved)
+	ONT_SLOT_OFFSET := 12  //= Max(ONT_PORT) = 12
+	VLAN_OFFSET := 1       //(VID 1 is reserved)
 
-	CVID := ((ont - 1) % 32) * ONT_PORT_OFFSET +
-			 	(slot - 1) * ONT_SLOT_OFFSET +  port + VLAN_OFFSET
+	CVID := ((ont-1)%32)*ONT_PORT_OFFSET +
+		(slot-1)*ONT_SLOT_OFFSET + port + VLAN_OFFSET
 
 	return CVID
 }
 
 func calculateSvlan(slot int, port int, ont int) int {
 	LT_SLOT_OFFSET := 16
-	VLAN_GAP := 288 // Max(LT_SLOT) * Max(LT_SLOT_OFFSET) = 18 * 16 = 288
-	VLAN_OFFSET := 1  //(VID 1 is reserved)
+	VLAN_GAP := 288  // Max(LT_SLOT) * Max(LT_SLOT_OFFSET) = 18 * 16 = 288
+	VLAN_OFFSET := 1 //(VID 1 is reserved)
 
-	SVID := ((slot - 1) * LT_SLOT_OFFSET + port) + ((ont - 1) / 32) * VLAN_GAP + VLAN_OFFSET
+	SVID := ((slot-1)*LT_SLOT_OFFSET + port) + ((ont-1)/32)*VLAN_GAP + VLAN_OFFSET
 
 	return SVID
 }
-
-
 
 func (chassis *Chassis) NextPort() (*Port, error) {
 	info := &chassis.AllocInfo
