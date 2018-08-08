@@ -53,15 +53,11 @@ func AddCard(physChassis *physicalModel.Chassis, olt physicalModel.Olt) (error) 
 
 	for i := 0; i < len(ports); i++ {
 		absPort, _ := absChassis.NextPort()
-		//should probably worry about error at some point
 		absPort.PhysPort = &ports[i]
-		ports[i].AssignTraits(absPort)
+		//AssignTraits(&ports[i], absPort)
 	}
-}
 
-/* Assigns properties of the abstract port, such as svlan and cvlan,
-to the physical port that it has been mapped to
-*/ 
-func AssignTraits(phys *physicalModel.PONPort, abs *abstractOLTModel.Port) {
 
+	//should probably worry about error at some point
+	return nil
 }
