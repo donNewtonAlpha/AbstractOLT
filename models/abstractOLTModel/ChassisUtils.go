@@ -1,38 +1,38 @@
-package chassisUtils
+package abstractOLTModel
 
-import "github.com/donNewtonAlpha/AbstractOLT/models/abstractOLTModel"
+import "errors"
 
 
-func generateChassis(CLLI string) (*abstractOLTModel.Chassis) {
-	chassis := abstractOLTModel.Chassis{CLLI: CLLI}
+func generateChassis(CLLI string) (*Chassis) {
+	chassis := Chassis{CLLI: CLLI}
 
-	var slots [16]abstractOLTModel.Slot
+	var slots [16]Slot
 	for i := 0; i < 16; i++ {
-		slots[i] = generateTestSlot(i, &chassis)
+		slots[i] = generateSlot(i, &chassis)
 	}
 
 	chassis.Slots = slots
 	return &chassis
 }
 
-func generateSlot(n, int, c *abstractOLTModel.Chassis) (abstractOLTModel.Slot) {
-	slot := abstractOLTModel.Slot{Number: n, Parent: c}
+func generateSlot(n int, c *Chassis) (Slot) {
+	slot := Slot{Number: n, Parent: c}
 
-	var ports [16]abstractOLTModel.Port
+	var ports [16]Port
 	for i := 0; i < 16; i++ {
-		ports[i] = generateTestPort(i, &slot)
+		ports[i] = generatePort(i, &slot)
 	}
 
 	slot.Ports = ports
 	return slot
 }
 
-func generatePort(n int, s *abstractOLTModel.Slot) (abstractOLTModel.Port) {
-	port := abstractOLTModel.Port{Number: n, Parent: s}
+func generatePort(n int, s *Slot) (Port) {
+	port := Port{Number: n, Parent: s}
 
-	var onts [64]abstractOLTModel.Ont
+	var onts [64]Ont
 	for i := 0; i < 64; i++ {
-		onts[i] = abstractOLTModel.Ont{Number: i, Svlan: calculateSvlan(s.Number, n, i),
+		onts[i] = Ont{Number: i, Svlan: calculateSvlan(s.Number, n, i),
 					Cvlan: calculateSvlan(s.Number, n, i), Parent: &port}
 	}
 
@@ -57,7 +57,7 @@ func calculateSvlan(slot int, port int, ont int) int {
 	VLAN_GAP := 288 // Max(LT_SLOT) * Max(LT_SLOT_OFFSET) = 18 * 16 = 288
 	VLAN_OFFSET := 1  //(VID 1 is reserved)
 
-	SVID := ((slot - 1) * LT_SLOT_OFFSET + port) + ((ont – 1) / 32) * VLAN_GAP] + VLAN_OFFSET
+	SVID := ((slot - 1) * LT_SLOT_OFFSET + port) + ((ont - 1) / 32) * VLAN_GAP + VLAN_OFFSET
 
 	return SVID
 }
