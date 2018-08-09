@@ -17,17 +17,26 @@ message AddChassisReturn{
    Error error = 2;
 }
 message AddOLTChassisMessage{
-   string ChassisDeviceID=1;
-   fixed32 SlotIP=2;
+   string CLLI=1;
+   string SlotIP=2;
    fixed32 SlotPort=3;
-   bool Activate = 4;
-   enum OltType {
-      openolt = 0;
-      asfvolt16=1;
-      adtran=2;
-      tibits=3;
+   string Hostname=4;
+   fixed32 NumPorts = 5;
+   bool Activate = 6;
+   enum OltDriver {
+      openoltDriver = 0;
+      asfvolt16Driver=1;
+      adtranDriver=2;
+      tibitsDriver=3;
    }
-   OltType oltType = 5;
+   OltDriver Driver=7;
+   enum OltType{
+      edgecore=0;
+      adtran=1;
+      tibit=2;
+   }
+   OltType Type=8;
+
 }
 message AddOLTChassisReturn {
    string DeviceID =1;
@@ -62,9 +71,9 @@ service AddChassis{
 }
 
 service AddOLTChassis {
-   rpc AddOLTChassis(AddOLTChassisMessage) returns (AddOLTChassisReturn) {
+   rpc CreateOLTChassis(AddOLTChassisMessage) returns (AddOLTChassisReturn) {
       option(google.api.http) = {
-         post: "/1/AddOLTChassis"
+         post: "/1/CreateOLTChassis"
 	 body:"*"
       };
    }

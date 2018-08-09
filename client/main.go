@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 
+	"runtime/debug"
+
 	"github.com/donNewtonAlpha/AbstractOLT/api"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -52,4 +54,11 @@ func main() {
 		log.Fatalf("Error when calling SayHello: %s", err)
 	}
 	log.Printf("Response from server: %s", response.GetDeviceID())
+	d := api.NewAddOLTChassisClient(conn)
+	newResponse, err := d.CreateOLTChassis(context.Background(), &api.AddOLTChassisMessage{CLLI: "my cilli", SlotIP: "12.2.2.0", SlotPort: 9191, Hostname: "SlotOne", Type: api.AddOLTChassisMessage_edgecore})
+	if err != nil {
+		debug.PrintStack()
+		log.Fatalf("Error when calling SayHello: %s", err)
+	}
+	log.Printf("Response from server: %s", newResponse.GetDeviceID())
 }
